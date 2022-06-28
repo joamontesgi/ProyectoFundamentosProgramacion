@@ -120,17 +120,44 @@ def salir(opcion):
     if opcion == 4:
         valor = False
     return valor
+def opc_estudiante(uno_dos):
+    if uno_dos == 1:
+        nombre = input('Ingrese su nombre: ')
+        cedula = input('Ingrese su cedula: ')
+        listado_est = open('cedulas_estudiante.txt', 'r')
+        datos_est = open('datos_estudiante.txt', 'r')
+        lista_cedulas = listado_est.readlines()
+        lista_notas = datos_est.readlines()
+        if cedula+"\n" not in lista_cedulas:
+            for i in range(3):
+                cedula = input('Su cedula no se encuentra registrada, o es incorrecta. Ingresela de nuevo: ')
+                if cedula+"\n" in lista_cedulas:
+                    posicion = lista_cedulas.index(cedula+"\n")
+                    print(nombre, "Estas son sus notas")
+                    print(lista_notas[posicion])
+                    break
+            print("Usted no se encuentra registrado en el listado de estudiantes")
+        elif cedula+"\n" in lista_cedulas:
+            posicion = lista_cedulas.index(cedula+"\n")
+            print(nombre, "Estas son sus notas")
+            print(lista_notas[posicion])
+    opcion=False
+    return opcion
 
 uno_dos = estu_prof()
+variable=opc_estudiante(uno_dos)
 respu_uno_dos = pregunta_reg(uno_dos)
-si_registro = registro(respu_uno_dos)
-si_registro2 = registro_hecho(respu_uno_dos, si_registro)
-opcion = ingreso_sistema(si_registro2)
-reg_not_estu(opcion)
-lista_estu(opcion)
-salir(opcion)
-while salir(opcion) == True:
+if variable == False:
+    print('Fin del sistema')
+else:
+    si_registro = registro(respu_uno_dos)
+    si_registro2 = registro_hecho(respu_uno_dos, si_registro)
     opcion = ingreso_sistema(si_registro2)
     reg_not_estu(opcion)
     lista_estu(opcion)
     salir(opcion)
+    while salir(opcion) == True:
+        opcion = ingreso_sistema(si_registro2)
+        reg_not_estu(opcion)
+        lista_estu(opcion)
+        salir(opcion)
