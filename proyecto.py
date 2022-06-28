@@ -106,6 +106,20 @@ def reg_not_estu(opcion):
         lista_est.close()
         lista_cedula.close()
 
+def lista_estu(opcion):
+    if opcion == 2:
+        lista_est = open('nombres_estudiante.txt', 'r')
+        listado = lista_est.readlines()
+        print("LISTADO DE ESTUDIANTES:")
+        for i in listado:
+            print(i.strip())
+        lista_est.close()
+
+def salir(opcion):
+    valor = True
+    if opcion == 4:
+        valor = False
+    return valor
 
 uno_dos = estu_prof()
 respu_uno_dos = pregunta_reg(uno_dos)
@@ -113,3 +127,10 @@ si_registro = registro(respu_uno_dos)
 si_registro2 = registro_hecho(respu_uno_dos, si_registro)
 opcion = ingreso_sistema(si_registro2)
 reg_not_estu(opcion)
+lista_estu(opcion)
+salir(opcion)
+while salir(opcion) == True:
+    opcion = ingreso_sistema(si_registro2)
+    reg_not_estu(opcion)
+    lista_estu(opcion)
+    salir(opcion)
