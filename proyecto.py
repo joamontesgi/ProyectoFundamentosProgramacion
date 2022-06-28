@@ -73,8 +73,43 @@ def registro_hecho(respu_uno_dos, si_registro):
             print("Sí está registrado")
             return True
 
+def ingreso_sistema(si_registro2):
+    if si_registro2 == True:
+        print("Hola profesor: ")
+        opcion = int(input('Ingrese:\n1. Registrar estudiantes e ingresar calificación (nota 1 y 2).\n2. Mostrar la lista de estudiantes.\n3. Generar reporte (Graficas).\n4. Salir del sistema.\n'))
+        while opcion < 1 or opcion > 4:
+            print("Ingresó un valor no valido, por favor intente de nuevo.")
+            opcion = int(input(
+                'Ingrese:\n1. Registrar estudiantes e ingresar calificación (nota 1 y 2).\n2. Mostrar la lista de estudiantes.\n3. Generar reporte (Graficas).\n4. Salir del sistema.\n'))
+    return opcion
+
+def reg_not_estu(opcion):
+    if opcion == 1:
+        lista_est = open('nombres_estudiante.txt', 'w')
+        datos_est = open("datos_estudiante.txt", "w")
+        lista_cedula = open("cedulas_estudiante.txt", "w")
+        cantidad = int(input('Ingrese la cantidad de estudiantes: '))
+        for i in range(cantidad):
+            name = input(f'Ingrese el nombre del estudiante {i+1}: ')
+            cedula = input(f'Ingrese la cedula el estudiante {i+1}: ')
+            nota1 = float(input(
+                f'Ingrese la nota del estudiante {name} en la asignatura CALCULO INTEGRAL: '))
+            nota2 = float(input(
+                f'Ingrese la nota del estudiante {name} en la asignatura FUNDAMENTOS DE PROGRAMACIÓN: '))
+            diccionario = {'cedula': cedula,
+                           'calculo': nota1, 'fundamentos': nota2}
+            datos_est.write(str(diccionario)+'\n')
+            lista_est.write((name)+'\n')
+            lista_cedula.write((cedula)+"\n")
+        print("EL REGISTRO DE NOTAS HA SIDO CORRECTO")
+        datos_est.close()
+        lista_est.close()
+        lista_cedula.close()
+
 
 uno_dos = estu_prof()
 respu_uno_dos = pregunta_reg(uno_dos)
 si_registro = registro(respu_uno_dos)
 si_registro2 = registro_hecho(respu_uno_dos, si_registro)
+opcion = ingreso_sistema(si_registro2)
+reg_not_estu(opcion)
