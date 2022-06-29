@@ -1,4 +1,6 @@
+from cProfile import label
 from io import open
+from matplotlib import colors
 import matplotlib.pyplot as plt
 def estu_prof():
     print("INICIO DEL SISTEMA")
@@ -149,6 +151,8 @@ def graficas(opcion):
         notasC=[]
         notasFP=[]
         nada=[]
+        ganaron_cal=0
+        ganaron_fp=0
         nota_cal=open("notas_calculo.txt",'r')
         nota_fp=open('notas_fp.txt','r')
         documento=open('cedulas_estudiante.txt', 'r')
@@ -156,21 +160,46 @@ def graficas(opcion):
             i.strip()
             x=float(i)
             notasC.append(x)
+            if x>=3:
+                ganaron_cal+=1
         for i in nota_fp:
             i.strip()
             z=float(i)
             notasFP.append(z)
+            if z>=3:
+                ganaron_fp+=1
         for i in documento:
-            i.strip()
-            y=float(i)
+            y=i.strip()
             nada.append(y)
-        print('\n### GRAFICA DE NOTAS DE CALCULO INTEGRAL ###')
-        plt.plot(nada,notasC,'*:g') 
+        tam_cal=len(notasC)
+        tam_fp=len(notasFP)
+        perdieron_cal=tam_cal-ganaron_cal
+        perdieron_fp=tam_fp-ganaron_fp
+        fig, ax = plt.subplots()
+        ax.bar(nada, notasC)
+        plt.title("GRAFICA DE NOTAS DE CALCULO INTEGRAL")
         plt.show()
-        print('\n### GRAFICA DE NOTAS DE FUNDAMENTOS DE PROGRAMACION ###')
-        plt.plot(nada,notasFP,'*:g') 
+        fig, ax = plt.subplots()
+        ax.bar(nada, notasFP)
+        plt.title("GRAFICA DE NOTAS DE FUNDAMENTOS DE PROGRAMACION")
         plt.show()
-            
+        fig, ax = plt.subplots()
+        ax.plot(nada, notasC, marker = '*')
+        ax.plot(nada, notasFP, marker = '^')
+        plt.title("EL AZUL ES CÁLCULO, EL NARANJA ES FUNDAMENTOS")
+        plt.show()
+        etiquetas=["Ganaron cálculo","Perdieron cálculo"]
+        x=ganaron_cal*100/tam_cal
+        porcentajes=[x, perdieron_cal]
+        plt.pie(porcentajes, labels=etiquetas)
+        plt.title("PROCENTAJES DE CÁLCULO INTEGRAL")
+        plt.show()
+        etiquetas2=["Ganaron FP","Perdieron FP"]       
+        Z=ganaron_fp*100/tam_fp
+        porcentajes2=[z, perdieron_fp]
+        plt.pie(porcentajes2, labels=etiquetas2)
+        plt.title("PORCENTAJES DE FUNDAMENTOS DE PROGRAMACIÓN")
+        plt.show()
 uno_dos = estu_prof()
 if opc_estudiante(uno_dos)==False:
     print('\n### FIN DEL SISTEMA ###')
