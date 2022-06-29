@@ -181,7 +181,11 @@ def graficas(opcion):
     if opcion==3:
         notasC=[]
         notasFP=[]
+<<<<<<< HEAD
         documentos=[]
+=======
+        nada=[]
+>>>>>>> c38aed607ca69273a38058205bd20de439b93c73
         ganaron_cal=0
         ganaron_fp=0
         nota_cal=open("notas_calculo.txt",'r')
@@ -201,12 +205,17 @@ def graficas(opcion):
                 ganaron_fp+=1
         for i in documento:
             y=i.strip()
+<<<<<<< HEAD
             documentos.append(y)
+=======
+            nada.append(y)
+>>>>>>> c38aed607ca69273a38058205bd20de439b93c73
         tam_cal=len(notasC)
         tam_fp=len(notasFP)
         perdieron_cal=tam_cal-ganaron_cal
         perdieron_fp=tam_fp-ganaron_fp
         fig, ax = plt.subplots()
+<<<<<<< HEAD
         ax.bar(documentos, notasC)
         plt.title("GRAFICA DE NOTAS DE CALCULO INTEGRAL")
         plt.show()
@@ -221,11 +230,33 @@ def graficas(opcion):
         plt.show()
         etiquetas=["Ganaron cálculo","Perdieron cálculo"]
         porcentajes=[ganaron_cal, perdieron_cal]
+=======
+        ax.bar(nada, notasC)
+        plt.title("GRAFICA DE NOTAS DE CALCULO INTEGRAL")
+        plt.show()
+        fig, ax = plt.subplots()
+        ax.bar(nada, notasFP)
+        plt.title("GRAFICA DE NOTAS DE FUNDAMENTOS DE PROGRAMACION")
+        plt.show()
+        fig, ax = plt.subplots()
+        ax.plot(nada, notasC, marker = '*')
+        ax.plot(nada, notasFP, marker = '^')
+        plt.title("EL AZUL ES CÁLCULO, EL NARANJA ES FUNDAMENTOS")
+        plt.show()
+        etiquetas=["Ganaron cálculo","Perdieron cálculo"]
+        x=ganaron_cal*100/tam_cal
+        porcentajes=[x, perdieron_cal]
+>>>>>>> c38aed607ca69273a38058205bd20de439b93c73
         plt.pie(porcentajes, labels=etiquetas)
         plt.title("PROCENTAJES DE CÁLCULO INTEGRAL")
         plt.show()
         etiquetas2=["Ganaron FP","Perdieron FP"]       
+<<<<<<< HEAD
         porcentajes2=[ganaron_fp, perdieron_fp]
+=======
+        Z=ganaron_fp*100/tam_fp
+        porcentajes2=[z, perdieron_fp]
+>>>>>>> c38aed607ca69273a38058205bd20de439b93c73
         plt.pie(porcentajes2, labels=etiquetas2)
         plt.title("PORCENTAJES DE FUNDAMENTOS DE PROGRAMACIÓN")
         plt.show()
