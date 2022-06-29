@@ -1,4 +1,7 @@
+from cProfile import label
 from io import open
+from matplotlib import colors
+import matplotlib.pyplot as plt
 def estu_prof():
     print("INICIO DEL SISTEMA")
     pregunta = int(input("Digite:\n1. Sí es estudiante\n2. Sí es profesor\n"))
@@ -71,11 +74,11 @@ def registro_hecho(respu_uno_dos, si_registro):
 
 def ingreso_sistema(si_registro2):
     if si_registro2 == True:
-        print('\n### INGRESANDO AL SISTEMA ###\n')
+        print('\n### INGRESANDO AL MENÚ ###\n')
         print("HOLA PROFESOR\n")
         opcion = int(input('Ingrese:\n1. Registrar estudiantes e ingresar calificación (nota 1 y 2).\n2. Mostrar la lista de estudiantes.\n3. Generar reporte (Graficas).\n4. Salir del sistema.\n'))
         while opcion < 1 or opcion > 4:
-            print("Ingresó un valor no valido, por favor intente de nuevo.")
+            print("Ingresó un valor no valido, por favor intente de nuevo.\n")
             opcion = int(input(
                 'Ingrese:\n1. Registrar estudiantes e ingresar calificación (nota 1 y 2).\n2. Mostrar la lista de estudiantes.\n3. Generar reporte (Graficas).\n4. Salir del sistema.\n'))
     return opcion
@@ -86,28 +89,32 @@ def reg_not_estu(opcion):
         datos_est = open("datos_estudiante.txt", "w")
         lista_cedula = open("cedulas_estudiante.txt", "w")
         cantidad = int(input('Ingrese la cantidad de estudiantes: '))
+        lista_calculo = open("notas_calculo.txt",'w')
+        lista_fp=open('notas_fp.txt','w')
         for i in range(cantidad):
             name = input(f'Ingrese el nombre del estudiante {i+1}: ')
             cedula = input(f'Ingrese la cedula el estudiante {i+1}: ')
-            nota1 = float(input(
-                f'Ingrese la nota del estudiante {name} en la asignatura CALCULO INTEGRAL: '))
-            nota2 = float(input(
-                f'Ingrese la nota del estudiante {name} en la asignatura FUNDAMENTOS DE PROGRAMACIÓN: '))
-            diccionario = {'cedula': cedula,
-                           'calculo': nota1, 'fundamentos': nota2}
+            nota1 = float(input(f'Ingrese la nota del estudiante {name} en la asignatura CALCULO INTEGRAL: '))
+            nota2 = float(input(f'Ingrese la nota del estudiante {name} en la asignatura FUNDAMENTOS DE PROGRAMACIÓN: '))
+            diccionario = {'cedula': cedula,'calculo': nota1, 'fundamentos': nota2}
             datos_est.write(str(diccionario)+'\n')
             lista_est.write((name)+'\n')
             lista_cedula.write((cedula)+"\n")
-        print("EL REGISTRO DE NOTAS HA SIDO CORRECTO")
+            lista_calculo.write(str(nota1)+'\n')
+            lista_fp.write(str(nota2)+'\n')
+        print("\nEL REGISTRO DE NOTAS HA SIDO CORRECTO\n")
         datos_est.close()
         lista_est.close()
         lista_cedula.close()
+        lista_calculo.close()
+        lista_fp.close()
+        return lista_calculo, lista_fp
 
 def lista_estu(opcion):
     if opcion == 2:
         lista_est = open('nombres_estudiante.txt', 'r')
         listado = lista_est.readlines()
-        print("LISTADO DE ESTUDIANTES:\n")
+        print("\nLISTADO DE ESTUDIANTES:\n")
         for i in listado:
             print(i.strip())
         lista_est.close()
@@ -127,19 +134,101 @@ def opc_estudiante(uno_dos):
         lista_notas = datos_est.readlines()
         if cedula+"\n" not in lista_cedulas:
             for i in range(3):
-                cedula = input('\nSu cedula no se encuentra registrada, o es incorrecta. Ingresela de nuevo: ')
+                cedula = input('\nSu cedula no se encuentra registrada o es incorrecta. Ingresela de nuevo: ')
                 if cedula+"\n" in lista_cedulas:
                     posicion = lista_cedulas.index(cedula+"\n")
-                    print(nombre, "Estas son sus notas")
+                    print(nombre, "estas son sus notas")
                     print(lista_notas[posicion])
                     break
             print("Usted no se encuentra registrado en el listado de estudiantes")
+            return False
         elif cedula+"\n" in lista_cedulas:
             posicion = lista_cedulas.index(cedula+"\n")
-            print(nombre, "Estas son sus notas:\n")
+            print(nombre, "estas son sus notas:\n")
             print(lista_notas[posicion])
+        pregunta=int(input('Ingrese:\n1. Si desea ver el reporte de los estudiantes(Grafico)\n2. Si desea salir del sistema.\n'))
+        while pregunta<1 or pregunta>2:
+            print('ERROR, Intente nuevamentene.\n')
+            pregunta=int(input('Ingrese:\n1. Si desea ver el reporte de los estudiantes(Grafico)\n2. Si desea salir del sistema.\n'))
+        if pregunta == 1:
+            notasC=[]
+            notasFP=[]
+            documentos=[]
+            nota_cal=open("notas_calculo.txt",'r')
+            nota_fp=open('notas_fp.txt','r')
+            documento=open('cedulas_estudiante.txt', 'r')
+            for i in nota_cal:
+                i.strip()
+                x=float(i)
+                notasC.append(x)
+            for i in nota_fp:
+                i.strip()
+                z=float(i)
+                notasFP.append(z)
+            for i in documento:
+                y=i.strip()
+                documentos.append(y)
+            fig, ax = plt.subplots()
+            ax.bar(documentos, notasC)
+            plt.title("GRAFICA DE NOTAS DE CALCULO INTEGRAL")
+            plt.show()
+            fig, ax = plt.subplots()
+            ax.bar(documentos, notasFP)
+            plt.title("GRAFICA DE NOTAS DE FUNDAMENTOS DE PROGRAMACION")
+            plt.show()  
         return False
-
+def graficas(opcion):
+    if opcion==3:
+        notasC=[]
+        notasFP=[]
+        documentos=[]
+        ganaron_cal=0
+        ganaron_fp=0
+        nota_cal=open("notas_calculo.txt",'r')
+        nota_fp=open('notas_fp.txt','r')
+        documento=open('cedulas_estudiante.txt', 'r')
+        for i in nota_cal:
+            i.strip()
+            x=float(i)
+            notasC.append(x)
+            if x>=3:
+                ganaron_cal+=1
+        for i in nota_fp:
+            i.strip()
+            z=float(i)
+            notasFP.append(z)
+            if z>=3:
+                ganaron_fp+=1
+        for i in documento:
+            y=i.strip()
+            documentos.append(y)
+        tam_cal=len(notasC)
+        tam_fp=len(notasFP)
+        perdieron_cal=tam_cal-ganaron_cal
+        perdieron_fp=tam_fp-ganaron_fp
+        fig, ax = plt.subplots()
+        ax.bar(documentos, notasC)
+        plt.title("GRAFICA DE NOTAS DE CALCULO INTEGRAL")
+        plt.show()
+        fig, ax = plt.subplots()
+        ax.bar(documentos, notasFP)
+        plt.title("GRAFICA DE NOTAS DE FUNDAMENTOS DE PROGRAMACION")
+        plt.show()
+        fig, ax = plt.subplots()
+        ax.plot(documentos, notasC, marker = '*')
+        ax.plot(documentos, notasFP, marker = '^')
+        plt.title("EL AZUL ES CÁLCULO, EL NARANJA ES FUNDAMENTOS")
+        plt.show()
+        etiquetas=["Ganaron cálculo","Perdieron cálculo"]
+        porcentajes=[ganaron_cal, perdieron_cal]
+        plt.pie(porcentajes, labels=etiquetas)
+        plt.title("PROCENTAJES DE CÁLCULO INTEGRAL")
+        plt.show()
+        etiquetas2=["Ganaron FP","Perdieron FP"]       
+        porcentajes2=[ganaron_fp, perdieron_fp]
+        plt.pie(porcentajes2, labels=etiquetas2)
+        plt.title("PORCENTAJES DE FUNDAMENTOS DE PROGRAMACIÓN")
+        plt.show()
 uno_dos = estu_prof()
 if opc_estudiante(uno_dos)==False:
     print('\n### FIN DEL SISTEMA ###')
@@ -150,10 +239,12 @@ else:
     opcion = ingreso_sistema(si_registro2)
     reg_not_estu(opcion)
     lista_estu(opcion)
+    graficas(opcion)
     salir(opcion)
     while salir(opcion) == True:
         opcion = ingreso_sistema(si_registro2)
         reg_not_estu(opcion)
         lista_estu(opcion)
+        graficas(opcion)
         salir(opcion)
     print('### FIN DEL SISTEMA ###')
